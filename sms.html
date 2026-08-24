@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Updates — Moses Executive Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+ :root{--ink:#0A0A0A;--paper:#FAF9F6;--cream:#F4F1EB;--gold:#B5A27A;--line:#e5e0d6}
+ *{box-sizing:border-box;margin:0;padding:0}
+ body{font-family:'Instrument Sans',-apple-system,Segoe UI,sans-serif;background:var(--paper);color:#1a1a1a;line-height:1.6}
+ .wrap{max-width:560px;margin:0 auto;padding:54px 24px}
+ .eyebrow{letter-spacing:.3em;text-transform:uppercase;font-size:10.5px;color:var(--gold)}
+ h1{font-family:'Bodoni Moda',serif;font-weight:400;font-size:clamp(30px,7vw,46px);line-height:1.05;margin:12px 0 10px}
+ p.lead{color:#5b5850;font-size:15px;margin-bottom:26px}
+ form{background:#fff;border:1px solid var(--line);border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px}
+ label{font-size:12px;letter-spacing:.06em;color:#6d6a62;text-transform:uppercase}
+ input[type=text],input[type=tel]{width:100%;border:1px solid var(--line);border-radius:12px;padding:13px 15px;font-size:15px;outline:none}
+ .consent{display:flex;gap:11px;align-items:flex-start;font-size:12.5px;color:#5b5850;line-height:1.55}
+ .consent input{margin-top:3px}
+ button{border:none;background:var(--ink);color:var(--cream);border-radius:999px;padding:16px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+ button:disabled{opacity:.5;cursor:not-allowed}
+ a{color:#8E7C55}
+ .ok{display:none;background:#EDE7DB;border-radius:16px;padding:22px;text-align:center;margin-top:16px}
+ .foot{margin-top:22px;font-size:11px;color:#9B9387;text-align:center}
+</style></head><body>
+<div class="wrap">
+ <div class="eyebrow">Moses Executive Studio · Brickell</div>
+ <h1>Stay in touch <em style="font-style:italic">by text.</em></h1>
+ <p class="lead">Get appointment reminders and studio updates by SMS. Private, low-frequency, and easy to leave anytime.</p>
+ <form id="optin">
+  <div><label for="name">Full name</label><input id="name" type="text" required placeholder="Your name"></div>
+  <div><label for="phone">Mobile number (US)</label><input id="phone" type="tel" required placeholder="+1 305 555 0123"></div>
+  <label class="consent"><input id="agree" type="checkbox">
+   <span>By checking this box, I agree to receive recurring SMS appointment reminders and studio updates from Moses Executive Studio at the number provided. Consent is not a condition of any purchase. Message frequency varies. Message and data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="/privacy.html" target="_blank">Privacy Policy</a> and <a href="/terms.html" target="_blank">Terms &amp; Conditions</a>.</span>
+  </label>
+  <button id="submit" type="submit" disabled>Subscribe to text updates</button>
+ </form>
+ <div class="ok" id="ok">Thank you. You are subscribed to text updates from Moses Executive Studio. Reply STOP anytime to opt out.</div>
+ <div class="foot">Moses Executive Studio · Sola Salon Studios, 108 SW 9th St, Ste 26, Miami, FL 33130 · +1 760-405-3901</div>
+</div>
+<script>
+ var API="https://the303photography.app.n8n.cloud/webhook/moses-sms-optin";
+ var agree=document.getElementById("agree"),submit=document.getElementById("submit");
+ agree.addEventListener("change",function(){submit.disabled=!agree.checked;});
+ document.getElementById("optin").addEventListener("submit",function(e){
+   e.preventDefault();
+   if(!agree.checked)return;
+   var name=document.getElementById("name").value.trim();
+   var phone=document.getElementById("phone").value.trim();
+   submit.disabled=true;submit.textContent="Sending...";
+   fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name:name,phone:phone})})
+   .then(function(r){return r.json();}).then(function(){document.getElementById("optin").style.display="none";document.getElementById("ok").style.display="block";})
+   .catch(function(){submit.disabled=false;submit.textContent="Subscribe to text updates";alert("Something went wrong. Please text us at +1 760-405-3901.");});
+ });
+</script>
+</body></html>
