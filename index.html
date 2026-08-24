@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;1,6..96,400&amp;family=Instrument+Sans:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: #E9E5DE; color: #141414; font-family: "Instrument Sans", system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  * { box-sizing: border-box; }
+  a { color: #B5A27A; text-decoration: none; }
+  a:hover { color: #8E7C55; }
+  button { font-family: inherit; cursor: pointer; }
+  input, textarea, select { font-family: inherit; }
+  ::selection { background: #B5A27A; color: #0A0A0A; }
+  @keyframes rise { from { opacity: 0; transform: translateY(26px); } to { opacity: 1; transform: none; } }
+  @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes drift { 0%,100% { transform: translate(-50%,-50%) scale(1); } 50% { transform: translate(-50%,-52%) scale(1.035); } }
+  @keyframes breathe { 0%,100% { opacity: .5; transform: translate(-50%,-50%) scale(1); } 50% { opacity: .9; transform: translate(-50%,-50%) scale(1.04); } }
+  @keyframes sheet { from { transform: translateY(3%); opacity: .4; } to { transform: none; opacity: 1; } }
+  @keyframes slidein { from { transform: translateX(4%); opacity: .4; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+</style>
+</helmet>
+
+<div style="max-width: 1560px; margin: 0 auto; padding: 0 clamp(8px, 1.6vw, 22px) 0;">
+
+  <header style="position: sticky; top: 0; z-index: 60; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 14px clamp(14px, 2.4vw, 34px); margin-top: 10px; border-radius: 999px; background: rgba(250,249,246,0.82); backdrop-filter: blur(14px); border: 1px solid rgba(10,10,10,0.06);">
+    <a href="#top" style="display: flex; align-items: center; gap: 12px;">
+      <img src="brand/moses-full.png" alt="Moses Executive Studio" style="height: 34px; width: auto; display: block;">
+      <span style="display: block; width: 1px; height: 22px; background: rgba(10,10,10,0.14);"></span>
+      <span style="font-size: 9.5px; letter-spacing: 0.26em; text-transform: uppercase; color: #9B9387; line-height: 1.5;">Executive<br>Studio</span>
+    </a>
+    <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+      <nav style="display: flex; align-items: center; gap: clamp(18px, 2.4vw, 38px);">
+        <a href="#services" style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #141414;" style-hover="color: #B5A27A;">Services</a>
+        <a href="#experience" style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #141414;" style-hover="color: #B5A27A;">The Experience</a>
+        <a href="#about" style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #141414;" style-hover="color: #B5A27A;">About</a>
+        <a href="#location" style="font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: #141414;" style-hover="color: #B5A27A;">Location</a>
+        <button type="button" onClick="{{ openBooking }}" style="border: none; border-radius: 999px; background: #0A0A0A; color: #F4F1EB; font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; padding: 14px 30px; transition: background .4s ease, box-shadow .4s ease;" style-hover="background: #241f16; box-shadow: 0 0 34px rgba(181,162,122,0.34);">Book</button>
+      </nav>
+    </sc-if>
+    <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+      <button type="button" aria-label="Open menu" onClick="{{ toggleNav }}" style="display: flex; flex-direction: column; gap: 5px; justify-content: center; align-items: flex-end; width: 44px; height: 44px; background: none; border: none;">
+        <span style="display: block; width: 22px; height: 1px; background: #0A0A0A;"></span>
+        <span style="display: block; width: 14px; height: 1px; background: #0A0A0A;"></span>
+      </button>
+    </sc-if>
+  </header>
+
+  <sc-if value="{{ navOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; inset: 0; z-index: 70; background: #0A0A0A; display: flex; flex-direction: column; justify-content: space-between; padding: 26px 26px 40px; animation: fadein .3s ease both;">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <img src="brand/moses-full.png" alt="Moses" style="height: 30px; filter: invert(1);">
+        <button type="button" aria-label="Close menu" onClick="{{ toggleNav }}" style="background: none; border: 1px solid rgba(244,241,235,0.2); border-radius: 999px; color: #F4F1EB; width: 44px; height: 44px; font-size: 15px;">✕</button>
+      </div>
+      <nav style="display: flex; flex-direction: column; gap: 4px;">
+        <a href="#services" onClick="{{ closeNav }}" style="font-family: 'Bodoni Moda', serif; font-size: 38px; color: #F4F1EB; padding: 8px 0; border-bottom: 1px solid rgba(244,241,235,0.1);">Services</a>
+        <a href="#experience" onClick="{{ closeNav }}" style="font-family: 'Bodoni Moda', serif; font-size: 38px; color: #F4F1EB; padding: 8px 0; border-bottom: 1px solid rgba(244,241,235,0.1);">Experience</a>
+        <a href="#about" onClick="{{ closeNav }}" style="font-family: 'Bodoni Moda', serif; font-size: 38px; color: #F4F1EB; padding: 8px 0; border-bottom: 1px solid rgba(244,241,235,0.1);">About</a>
+        <a href="#location" onClick="{{ closeNav }}" style="font-family: 'Bodoni Moda', serif; font-size: 38px; color: #F4F1EB; padding: 8px 0;">Location</a>
+      </nav>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <button type="button" onClick="{{ openBooking }}" style="border: none; border-radius: 999px; background: #F4F1EB; color: #0A0A0A; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 20px;">Book by Phone</button>
+        <span style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387; text-align: center;">108 SW 9th St · Brickell, Miami</span>
+      </div>
+    </div>
+  </sc-if>
+
+  <section id="top" data-screen-label="Hero" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #0A0A0A; min-height: 88svh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: clamp(96px, 12vh, 150px) clamp(20px, 5vw, 90px) clamp(72px, 10vh, 130px);">
+    <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 34%, rgba(181,162,122,0.16), transparent 58%); pointer-events: none;"></div>
+    <img src="brand/moses-monogram.png" alt="" aria-hidden="true" style="position: absolute; left: 50%; top: 50%; width: min(62vw, 720px); filter: invert(1); opacity: 0.06; animation: drift 22s ease-in-out infinite; pointer-events: none;">
+    <div style="position: absolute; left: 50%; top: 50%; width: min(88vw, 860px); aspect-ratio: 1; border: 1px solid rgba(244,241,235,0.13); border-radius: 50%; animation: breathe 16s ease-in-out infinite; pointer-events: none;"></div>
+    <div style="position: absolute; inset: 0; background-image: url('textures/grain-silk.jpg'); background-size: cover; background-position: center; opacity: 0.07; mix-blend-mode: screen; pointer-events: none;"></div>
+    <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: clamp(22px, 3vw, 34px); animation: rise 1.1s cubic-bezier(.2,.7,.2,1) both;">
+      <span style="font-size: 10.5px; letter-spacing: 0.34em; text-transform: uppercase; color: #B5A27A;">Private Grooming · Brickell, Miami</span>
+      <h1 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; color: #F4F1EB; font-size: clamp(31px, 8.4vw, 104px); line-height: 0.98; letter-spacing: -0.015em; text-wrap: balance;">PRIVATE GROOMING<br>FOR MEN WHOSE<br><em style="font-style: italic; color: #FAF9F6;">PRESENCE MATTERS.</em></h1>
+      <p style="margin: 0; max-width: 540px; font-size: clamp(14px, 1.15vw, 16.5px); line-height: 1.75; color: rgba(203,199,191,0.92);">Precision, privacy and personalized grooming for professionals who expect more than a standard appointment.</p>
+      <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 6px; width: 100%; max-width: 520px;">
+        <button type="button" onClick="{{ openBooking }}" style="border: none; border-radius: 999px; background: #F4F1EB; color: #0A0A0A; font-size: 11.5px; letter-spacing: 0.22em; text-transform: uppercase; padding: 20px 34px; flex: 1 1 220px; transition: box-shadow .45s ease, transform .45s ease;" style-hover="box-shadow: 0 0 46px rgba(181,162,122,0.42); transform: translateY(-1px);">Book by Phone</button>
+        <a href="#experience" style="border: 1px solid rgba(244,241,235,0.26); border-radius: 999px; color: #F4F1EB; font-size: 11.5px; letter-spacing: 0.22em; text-transform: uppercase; padding: 20px 34px; flex: 1 1 220px; text-align: center; transition: border-color .45s ease;" style-hover="border-color: #B5A27A; color: #F4F1EB;">Explore the Experience</a>
+      </div>
+    </div>
+    <div style="position: absolute; bottom: 34px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 10px;">
+      <span style="display: block; width: 1px; height: 46px; background: linear-gradient(to bottom, rgba(244,241,235,0.42), transparent);"></span>
+    </div>
+  </section>
+
+  <section data-screen-label="Brand standard" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #F4F1EB; padding: 30px 0; border-top: 1px solid rgba(10,10,10,0.07); border-bottom: 1px solid rgba(10,10,10,0.07);">
+    <div style="display: flex; width: max-content; animation: marquee 34s linear infinite;">
+      <div style="display: flex; align-items: center; gap: 46px; padding-right: 46px;">
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PRECISION</span><span style="color: #B5A27A;">·</span>
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PRIVACY</span><span style="color: #B5A27A;">·</span>
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PUNCTUALITY</span><span style="color: #B5A27A;">·</span>
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PERSONAL ATTENTION</span><span style="color: #B5A27A;">·</span>
+      </div>
+      <div style="display: flex; align-items: center; gap: 46px; padding-right: 46px;" aria-hidden="true">
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PRECISION</span><span style="color: #B5A27A;">·</span>
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PRIVACY</span><span style="color: #B5A27A;">·</span>
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PUNCTUALITY</span><span style="color: #B5A27A;">·</span>
+        <span style="font-family: 'Bodoni Moda', serif; font-size: clamp(20px, 2.3vw, 34px); letter-spacing: 0.06em; color: #141414; white-space: nowrap;">PERSONAL ATTENTION</span><span style="color: #B5A27A;">·</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="services" data-screen-label="Services" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #FAF9F6; padding: clamp(60px, 9vw, 130px) clamp(22px, 5vw, 90px);">
+    <div style="position: absolute; inset: 0; background-image: url('textures/silk.jpg'); background-size: cover; opacity: 0.05; mix-blend-mode: multiply; pointer-events: none;"></div>
+    <div style="position: relative; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 28px; padding-bottom: clamp(34px, 5vw, 62px);">
+      <div style="display: flex; flex-direction: column; gap: 20px; max-width: 720px;">
+        <span style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #9B9387;">01 — Services</span>
+        <h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(27px, 6.6vw, 68px); line-height: 1.02; letter-spacing: -0.015em; color: #0A0A0A;">GROOMING,<br><em style="font-style: italic;">PRECISELY EXECUTED.</em></h2>
+      </div>
+      <p style="margin: 0; max-width: 330px; font-size: 14px; line-height: 1.8; color: #5b5850;">Each appointment is scheduled with margin, so no client is rushed and no detail is left unfinished.</p>
+    </div>
+    <div style="position: relative; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); border-top: 1px solid rgba(10,10,10,0.1);">
+      <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+        <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 34px; padding: clamp(26px, 3vw, 40px) clamp(20px, 2.4vw, 34px); border-bottom: 1px solid rgba(10,10,10,0.1); border-right: 1px solid rgba(10,10,10,0.1); min-height: 250px; transition: background .5s ease;" style-hover="background: rgba(181,162,122,0.07);">
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <span style="font-size: 10px; letter-spacing: 0.28em; color: #B5A27A;">{{ s.index }}</span>
+            <h3 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(22px, 2.1vw, 30px); line-height: 1.15; color: #0A0A0A;">{{ s.name }}</h3>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.7; color: #6d6a62; max-width: 300px;">{{ s.note }}</p>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 18px; border-top: 1px solid rgba(10,10,10,0.09);">
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #9B9387;">{{ s.duration }} · {{ s.price }}</span>
+            <button type="button" onClick="{{ s.reserve }}" style="background: none; border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 15px 24px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A; transition: all .4s ease;" style-hover="background: #0A0A0A; color: #F4F1EB; border-color: #0A0A0A;">Book</button>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="experience" data-screen-label="The Experience" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #0A0A0A; padding: clamp(64px, 9vw, 140px) clamp(22px, 5vw, 90px);">
+    <img src="brand/moses-monogram.png" alt="" aria-hidden="true" style="position: absolute; left: -14%; bottom: -24%; width: min(70vw, 700px); filter: invert(1); opacity: 0.055; pointer-events: none;">
+    <div style="position: absolute; inset: 0; background-image: url('textures/grain-silk.jpg'); background-size: cover; opacity: 0.06; mix-blend-mode: screen; pointer-events: none;"></div>
+    <div style="position: relative; display: flex; flex-direction: column; gap: clamp(44px, 6vw, 86px);">
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 26px;">
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <span style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #9B9387;">02 — The Experience</span>
+          <h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(27px, 6.8vw, 72px); line-height: 1.02; color: #F4F1EB;">MORE THAN<br><em style="font-style: italic;">AN APPOINTMENT.</em></h2>
+        </div>
+        <span style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #B5A27A;">By appointment only</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 0;">
+        <div style="display: flex; flex-direction: column; gap: 20px; padding: 4px clamp(20px, 3vw, 44px) 28px 0; border-left: 1px solid rgba(244,241,235,0.16); padding-left: clamp(20px, 2.6vw, 40px); animation: rise .9s ease both;">
+          <span style="font-family: 'Bodoni Moda', serif; font-size: 46px; line-height: 1; color: #B5A27A;">01</span>
+          <h3 style="margin: 0; font-size: 12px; letter-spacing: 0.26em; text-transform: uppercase; color: #F4F1EB;">Consultation</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.8; color: rgba(203,199,191,0.88); max-width: 330px;">A focused conversation about image, preferences, schedule and expectations.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px; padding: 4px clamp(20px, 3vw, 44px) 28px 0; border-left: 1px solid rgba(244,241,235,0.16); padding-left: clamp(20px, 2.6vw, 40px); animation: rise .9s ease .1s both;">
+          <span style="font-family: 'Bodoni Moda', serif; font-size: 46px; line-height: 1; color: #B5A27A;">02</span>
+          <h3 style="margin: 0; font-size: 12px; letter-spacing: 0.26em; text-transform: uppercase; color: #F4F1EB;">Craft</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.8; color: rgba(203,199,191,0.88); max-width: 330px;">Precision grooming executed with patience, consistency and attention to detail.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 20px; padding: 4px clamp(20px, 3vw, 44px) 28px 0; border-left: 1px solid rgba(244,241,235,0.16); padding-left: clamp(20px, 2.6vw, 40px); animation: rise .9s ease .2s both;">
+          <span style="font-family: 'Bodoni Moda', serif; font-size: 46px; line-height: 1; color: #B5A27A;">03</span>
+          <h3 style="margin: 0; font-size: 12px; letter-spacing: 0.26em; text-transform: uppercase; color: #F4F1EB;">Presence</h3>
+          <p style="margin: 0; font-size: 14px; line-height: 1.8; color: rgba(203,199,191,0.88); max-width: 330px;">A refined finish designed to leave every client renewed, confident and prepared.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about" data-screen-label="About" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #F4F1EB; padding: clamp(60px, 9vw, 130px) clamp(22px, 5vw, 90px);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: clamp(36px, 5vw, 80px); align-items: center;">
+      <div style="display: flex; flex-direction: column; gap: 26px; max-width: 560px;">
+        <span style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #9B9387;">03 — About Moses</span>
+        <h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(26px, 6.2vw, 62px); line-height: 1.04; color: #0A0A0A;">PERSONAL SERVICE.<br><em style="font-style: italic;">UNCOMPROMISING STANDARD.</em></h2>
+        <p style="margin: 0; font-size: 15px; line-height: 1.85; color: #4f4c46;">Moses Executive Studio was created around a simple belief: exceptional grooming begins with understanding the person, not simply performing the service. Every appointment is private, intentional and shaped around the client's image, lifestyle and expectations.</p>
+        <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 22px; border-top: 1px solid rgba(10,10,10,0.12);">
+          <span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #B5A27A;">Placeholder — Founder biography</span>
+          <p style="margin: 0; font-size: 13.5px; line-height: 1.8; color: #7a776f;">Short biography to be supplied by the client: training, years of practice, notable clientele and personal philosophy. This block is sized for approximately 60–80 words.</p>
+        </div>
+      </div>
+      <div style="position: relative; width: 100%; aspect-ratio: 4 / 5; max-width: 520px; justify-self: {{ portraitJustify }};">
+        <image-slot id="mes-portrait" shape="rounded" radius="28" placeholder="Professional portrait of Moses — vertical 4:5"></image-slot>
+        <span style="position: absolute; left: 0; bottom: -30px; font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: #9B9387;">Founder · Moses</span>
+      </div>
+    </div>
+  </section>
+
+  
+
+  <section data-screen-label="Gallery" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #141414; padding: clamp(60px, 9vw, 130px) clamp(22px, 5vw, 90px);">
+    <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 22px; padding-bottom: clamp(30px, 4vw, 54px);">
+      <h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(25px, 5.6vw, 52px); line-height: 1.05; color: #F4F1EB;">THE STUDIO,<br /><em style="font-style: italic;">IN DETAIL.</em></h2>
+      <span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #9B9387; max-width: 280px; line-height: 1.8;">Image placeholders — drop final photography in place</span>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px;">
+      <div style="position: relative; aspect-ratio: 3 / 4; min-height: 240px;">
+        <image-slot id="mes-gal-1" shape="rounded" radius="24" placeholder="Precision haircut — vertical crop"></image-slot>
+      </div>
+      <div style="position: relative; aspect-ratio: 3 / 2;">
+        <image-slot id="mes-gal-2" shape="rounded" radius="24" placeholder="Fade detail"></image-slot>
+      </div>
+      <div style="position: relative; aspect-ratio: 3 / 2;">
+        <image-slot id="mes-gal-3" shape="rounded" radius="24" placeholder="Beard work"></image-slot>
+      </div>
+      <div style="position: relative; aspect-ratio: 3 / 2;">
+        <image-slot id="mes-gal-4" shape="rounded" radius="24" placeholder="Studio interior"></image-slot>
+      </div>
+      <div style="position: relative; aspect-ratio: 3 / 2;">
+        <image-slot id="mes-gal-5" shape="rounded" radius="24" placeholder="Tools &amp; materials"></image-slot>
+      </div>
+      <div style="position: relative; aspect-ratio: 3 / 4; min-height: 240px;">
+        <image-slot id="mes-gal-6" shape="rounded" radius="24" placeholder="Client portrait — vertical"></image-slot>
+      </div>
+      <div style="position: relative; aspect-ratio: 3 / 2;">
+        <image-slot id="mes-gal-7" shape="rounded" radius="24" placeholder="Brickell lifestyle"></image-slot>
+      </div>
+    </div>
+  </section>
+
+  <section id="location" data-screen-label="Location" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #FAF9F6; padding: clamp(60px, 9vw, 130px) clamp(22px, 5vw, 90px);">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr)); gap: clamp(36px, 5vw, 74px);">
+      <div style="display: flex; flex-direction: column; gap: 30px;">
+        <span style="font-size: 10.5px; letter-spacing: 0.3em; text-transform: uppercase; color: #9B9387;">04 — Location &amp; Hours</span>
+        <h2 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(26px, 6.2vw, 62px); line-height: 1.04; color: #0A0A0A;">YOUR PRIVATE STUDIO<br><em style="font-style: italic;">IN BRICKELL.</em></h2>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <span style="font-size: 16px; line-height: 1.7; color: #141414;">108 SW 9th St</span>
+          <span style="font-size: 16px; line-height: 1.7; color: #141414;">Suite 26</span>
+          <span style="font-size: 16px; line-height: 1.7; color: #141414;">Miami, FL 33130</span>
+          <a href="tel:7604053901" style="font-size: 16px; line-height: 1.7; color: #B5A27A; margin-top: 10px;">760-405-3901</a>
+        </div>
+        <div style="display: flex; flex-direction: column; border-top: 1px solid rgba(10,10,10,0.12);">
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="7">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 13px 0; border-bottom: 1px solid rgba(10,10,10,0.08);">
+              <span style="font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase; color: {{ h.tone }};">{{ h.day }}</span>
+              <span style="font-size: 13px; color: {{ h.tone }};">{{ h.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+          <a href="https://maps.google.com/?q=108+SW+9th+St+Suite+26+Miami+FL+33130" target="_blank" rel="noopener" style="border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 16px 28px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A;" style-hover="background: #0A0A0A; color: #F4F1EB;">Open in Maps</a>
+          <a href="tel:7604053901" style="border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 16px 28px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A;" style-hover="background: #0A0A0A; color: #F4F1EB;">Call Studio</a>
+          <button type="button" onClick="{{ openBooking }}" style="border: none; border-radius: 999px; background: #0A0A0A; color: #F4F1EB; padding: 16px 28px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase;" style-hover="box-shadow: 0 0 30px rgba(181,162,122,0.34);">Book by Phone</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="position: relative; overflow: hidden; border-radius: 28px; background: #0A0A0A; min-height: clamp(240px, 48vw, 340px); flex: 1; display: flex; align-items: center; justify-content: center;">
+          <div style="position: absolute; inset: 0; background-image: linear-gradient(rgba(244,241,235,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(244,241,235,0.07) 1px, transparent 1px); background-size: 58px 58px;"></div>
+          <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 50%, rgba(181,162,122,0.18), transparent 62%);"></div>
+          <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px;">
+            <img src="brand/moses-monogram.png" alt="" style="width: 54px; filter: invert(1); opacity: 0.85;">
+            <span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #CBC7BF;">Map placeholder · Brickell</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px; padding: 22px 24px; border: 1px solid rgba(10,10,10,0.12); border-radius: 24px;">
+          <span style="font-size: 10px; letter-spacing: 0.24em; text-transform: uppercase; color: #B5A27A;">Arrival &amp; Parking</span>
+          <p style="margin: 0; font-size: 13.5px; line-height: 1.8; color: #6d6a62;">Placeholder — building entry instructions, suite access, valet or garage details, and guidance for first-time clients.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-screen-label="Final CTA" style="position: relative; overflow: hidden; margin-top: 10px; border-radius: clamp(22px, 5vw, 40px); background: #0A0A0A; padding: clamp(80px, 12vw, 170px) clamp(22px, 5vw, 90px); text-align: center; display: flex; flex-direction: column; align-items: center; gap: 30px;">
+    <div style="position: absolute; inset: 0; background: radial-gradient(circle at 50% 100%, rgba(181,162,122,0.2), transparent 60%);"></div>
+    <div style="position: absolute; inset: 0; background-image: url('textures/silk.jpg'); background-size: cover; opacity: 0.06; mix-blend-mode: screen;"></div>
+    <h2 style="position: relative; margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: clamp(26px, 6.8vw, 74px); line-height: 1.04; color: #F4F1EB;">YOUR TIME IS VALUABLE.<br><em style="font-style: italic;">YOUR PRESENCE IS PERSONAL.</em></h2>
+    <p style="position: relative; margin: 0; max-width: 520px; font-size: 15px; line-height: 1.8; color: rgba(203,199,191,0.9);">A private grooming experience designed around your schedule, image and expectations.</p>
+    <button type="button" onClick="{{ openBooking }}" style="position: relative; border: none; border-radius: 999px; background: #F4F1EB; color: #0A0A0A; font-size: 11.5px; letter-spacing: 0.22em; text-transform: uppercase; padding: 22px 46px; box-shadow: 0 0 40px rgba(181,162,122,0.28); transition: box-shadow .45s ease;" style-hover="box-shadow: 0 0 66px rgba(181,162,122,0.5);">Book by Phone</button>
+  </section>
+
+  <footer style="display: flex; flex-direction: column; gap: 44px; padding: clamp(52px, 6vw, 84px) clamp(18px, 4vw, 56px) 112px;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 40px;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <img src="brand/moses-full.png" alt="Moses Executive Studio" style="height: 96px; width: 127px">
+        <span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #9B9387;">Brickell, Miami</span>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #9B9387;">Studio</span>
+        <a href="#services" style="font-size: 13px; color: #141414;">Services</a>
+        <a href="#experience" style="font-size: 13px; color: #141414;">The Experience</a>
+        <a href="#about" style="font-size: 13px; color: #141414;">About</a>
+        <a href="#location" style="font-size: 13px; color: #141414;">Location</a>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #9B9387;">Booking</span>
+        <button type="button" onClick="{{ openBooking }}" style="align-self: flex-start; background: none; border: none; padding: 0; font-size: 13px; color: #141414;">Book by Phone</button>
+        <a href="tel:7604053901" style="font-size: 13px; color: #141414;">760-405-3901</a>
+        
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <span style="font-size: 10px; letter-spacing: 0.26em; text-transform: uppercase; color: #9B9387;">Information</span>
+        <a href="#" style="font-size: 13px; color: #141414;">Contact</a>
+        <a href="#" style="font-size: 13px; color: #141414;">Privacy Policy</a>
+        <a href="#" style="font-size: 13px; color: #141414;">Booking Policy</a>
+      </div>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding-top: 26px; border-top: 1px solid rgba(10,10,10,0.12);">
+      <span style="font-size: 11px; color: #9B9387;">© 2026 Moses Executive Studio. All rights reserved.</span>
+      <span style="font-size: 10.5px; letter-spacing: 0.24em; text-transform: uppercase; color: #9B9387;">Private grooming by appointment.</span>
+    </div>
+  </footer>
+
+  <sc-if value="{{ showMobileBar }}" hint-placeholder-val="{{ false }}">
+    <div style="position: fixed; left: 0; right: 0; bottom: 0; z-index: 55; padding: 12px 14px 16px; background: linear-gradient(to top, rgba(233,229,222,0.98), rgba(233,229,222,0.7)); backdrop-filter: blur(10px);">
+      <button type="button" onClick="{{ openBooking }}" style="width: 100%; border: none; border-radius: 999px; background: #0A0A0A; color: #F4F1EB; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; padding: 19px;">Book by Phone</button>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ bookingOpen }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="Private booking" style="position: fixed; inset: 0; z-index: 90; display: flex; justify-content: flex-end; align-items: {{ drawerAlign }};">
+      <div onClick="{{ closeBooking }}" style="position: absolute; inset: 0; background: rgba(10,10,10,0.62); backdrop-filter: blur(4px); animation: fadein .35s ease both;"></div>
+      <div style="position: relative; width: {{ drawerWidth }}; max-width: 100%; height: {{ drawerHeight }}; overflow: hidden; border-radius: {{ drawerRadius }}; margin-left: auto; background: #FAF9F6; display: flex; flex-direction: column; animation: {{ drawerAnim }};">
+        <div style="display: flex; flex-direction: column; gap: 18px; padding: 24px clamp(20px, 3vw, 40px) 20px; border-bottom: 1px solid rgba(10,10,10,0.1);">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px;">
+            <img src="brand/moses-full.png" alt="Moses" style="height: 30px; width: auto;">
+            <button type="button" aria-label="Close booking" onClick="{{ closeBooking }}" style="background: none; border: 1px solid rgba(10,10,10,0.18); border-radius: 999px; width: 40px; height: 40px; font-size: 14px; color: #0A0A0A;" style-hover="background: #0A0A0A; color: #F4F1EB;">✕</button>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+            <span style="font-size: 10.5px; letter-spacing: 0.28em; text-transform: uppercase; color: #0A0A0A;">{{ stepLabel }}</span>
+            <span style="font-size: 10.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">{{ stepCount }}</span>
+          </div>
+          <div style="position: relative; height: 1px; background: rgba(10,10,10,0.12);">
+            <div style="position: absolute; left: 0; top: 0; height: 1px; background: #B5A27A; width: {{ progress }}; transition: width .5s cubic-bezier(.2,.7,.2,1);"></div>
+          </div>
+        </div>
+
+        <div style="flex: 1; overflow-y: auto; padding: clamp(22px, 3vw, 34px) clamp(20px, 3vw, 40px) 30px;">
+          <sc-if value="{{ isStepService }}" hint-placeholder-val="{{ true }}">
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <sc-for list="{{ services }}" as="s" hint-placeholder-count="6">
+                <button type="button" onClick="{{ s.select }}" style="display: flex; align-items: center; justify-content: space-between; gap: 18px; text-align: left; padding: 20px 22px; border-radius: 20px; border: 1px solid {{ s.borderColor }}; background: {{ s.bgColor }}; transition: all .35s ease;" style-hover="border-color: #0A0A0A;">
+                  <span style="display: flex; flex-direction: column; gap: 6px;">
+                    <span style="font-family: 'Bodoni Moda', serif; font-size: 19px; color: #0A0A0A;">{{ s.name }}</span>
+                    <span style="font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase; color: #9B9387;">{{ s.duration }}</span>
+                  </span>
+                  <span style="font-size: 14px; color: #B5A27A; white-space: nowrap;">{{ s.price }}</span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isStepDate }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <span style="font-size: 12px; line-height: 1.7; color: #6d6a62;">Select a date. Availability shown is illustrative for this design phase.</span>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(84px, 1fr)); gap: 8px;">
+                <sc-for list="{{ days }}" as="d" hint-placeholder-count="12">
+                  <button type="button" onClick="{{ d.select }}" disabled="{{ d.disabled }}" style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 14px 6px; border-radius: 16px; border: 1px solid {{ d.borderColor }}; background: {{ d.bgColor }}; color: {{ d.textColor }}; transition: all .3s ease;">
+                    <span style="font-size: 9.5px; letter-spacing: 0.2em; text-transform: uppercase; opacity: .7;">{{ d.weekday }}</span>
+                    <span style="font-family: 'Bodoni Moda', serif; font-size: 22px; line-height: 1;">{{ d.dayNum }}</span>
+                    <span style="font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; opacity: .6;">{{ d.month }}</span>
+                  </button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isStepTime }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+              <span style="font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: #9B9387;">{{ selectedDateLong }}</span>
+              <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px;">
+                <sc-for list="{{ times }}" as="t" hint-placeholder-count="9">
+                  <button type="button" onClick="{{ t.select }}" disabled="{{ t.disabled }}" style="padding: 15px 8px; border-radius: 14px; border: 1px solid {{ t.borderColor }}; background: {{ t.bgColor }}; color: {{ t.textColor }}; font-size: 12.5px; letter-spacing: 0.06em; text-decoration: {{ t.strike }}; transition: all .3s ease;">{{ t.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isStepDetails }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 18px;">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr)); gap: 12px;">
+                <label style="display: flex; flex-direction: column; gap: 8px;">
+                  <span style="font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">First name</span>
+                  <input type="text" value="{{ firstName }}" onChange="{{ setFirstName }}" autocomplete="given-name" style="border: none; border-bottom: 1px solid rgba(10,10,10,0.2); background: none; padding: 10px 0; font-size: 15px; color: #0A0A0A; outline: none;">
+                </label>
+                <label style="display: flex; flex-direction: column; gap: 8px;">
+                  <span style="font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Last name</span>
+                  <input type="text" value="{{ lastName }}" onChange="{{ setLastName }}" autocomplete="family-name" style="border: none; border-bottom: 1px solid rgba(10,10,10,0.2); background: none; padding: 10px 0; font-size: 15px; color: #0A0A0A; outline: none;">
+                </label>
+              </div>
+              <label style="display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Mobile phone</span>
+                <input type="tel" value="{{ phone }}" onChange="{{ setPhone }}" autocomplete="tel" style="border: none; border-bottom: 1px solid rgba(10,10,10,0.2); background: none; padding: 10px 0; font-size: 15px; color: #0A0A0A; outline: none;">
+              </label>
+              <label style="display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Email</span>
+                <input type="email" value="{{ email }}" onChange="{{ setEmail }}" autocomplete="email" style="border: none; border-bottom: 1px solid rgba(10,10,10,0.2); background: none; padding: 10px 0; font-size: 15px; color: #0A0A0A; outline: none;">
+              </label>
+              <div style="display: flex; flex-direction: column; gap: 10px;">
+                <span style="font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Client</span>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" onClick="{{ setNewClient }}" style="flex: 1; padding: 14px; border-radius: 999px; border: 1px solid {{ newClientBorder }}; background: {{ newClientBg }}; color: {{ newClientText }}; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;">New</button>
+                  <button type="button" onClick="{{ setReturningClient }}" style="flex: 1; padding: 14px; border-radius: 999px; border: 1px solid {{ returningBorder }}; background: {{ returningBg }}; color: {{ returningText }}; font-size: 10.5px; letter-spacing: 0.18em; text-transform: uppercase;">Returning</button>
+                </div>
+              </div>
+              <label style="display: flex; flex-direction: column; gap: 8px;">
+                <span style="font-size: 9.5px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Grooming notes (optional)</span>
+                <textarea rows="3" value="{{ notes }}" onChange="{{ setNotes }}" style="border: 1px solid rgba(10,10,10,0.16); border-radius: 14px; background: none; padding: 12px 14px; font-size: 14px; line-height: 1.6; color: #0A0A0A; outline: none; resize: vertical;"></textarea>
+              </label>
+              <button type="button" onClick="{{ toggleConsent }}" style="display: flex; align-items: flex-start; gap: 12px; text-align: left; background: none; border: none; padding: 6px 0;">
+                <span style="flex: none; width: 18px; height: 18px; margin-top: 1px; border-radius: 4px; border: 1px solid {{ consentBorder }}; background: {{ consentBg }}; color: #FAF9F6; font-size: 11px; line-height: 17px; text-align: center;">{{ consentMark }}</span>
+                <span style="font-size: 12.5px; line-height: 1.65; color: #4f4c46;">I consent to receive appointment confirmations and reminders by text or email.</span>
+              </button>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isStepReview }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 22px;">
+              <div style="display: flex; flex-direction: column; border-top: 1px solid rgba(10,10,10,0.1);">
+                <sc-for list="{{ summary }}" as="row" hint-placeholder-count="6">
+                  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 15px 0; border-bottom: 1px solid rgba(10,10,10,0.08);">
+                    <span style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">{{ row.k }}</span>
+                    <span style="font-size: 14px; color: #0A0A0A; text-align: right;">{{ row.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <sc-if value="{{ hasNotes }}" hint-placeholder-val="{{ false }}">
+                <div style="display: flex; flex-direction: column; gap: 8px; padding: 18px 20px; border-radius: 18px; background: rgba(181,162,122,0.09);">
+                  <span style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Notes</span>
+                  <span style="font-size: 13.5px; line-height: 1.7; color: #4f4c46;">{{ notes }}</span>
+                </div>
+              </sc-if>
+              <span style="font-size: 12px; line-height: 1.7; color: #6d6a62;">No card is required for this temporary reservation.</span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isStepDone }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 26px; align-items: flex-start; animation: rise .7s ease both;">
+              <img src="brand/moses-monogram.png" alt="" style="width: 46px; opacity: 0.9;">
+              <div style="display: flex; flex-direction: column; gap: 12px;">
+                <h3 style="margin: 0; font-family: 'Bodoni Moda', serif; font-weight: 400; font-size: 30px; line-height: 1.15; color: #0A0A0A;">Reservation received.</h3>
+                <span style="font-size: 13px; line-height: 1.75; color: #6d6a62;">Your confirmation will be delivered by text or email. If your preferred time requires adjustment, the studio will contact you directly.</span>
+              </div>
+              <div style="width: 100%; display: flex; flex-direction: column; border-top: 1px solid rgba(10,10,10,0.1);">
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 15px 0; border-bottom: 1px solid rgba(10,10,10,0.08);">
+                  <span style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Reference</span>
+                  <span style="font-size: 14px; color: #B5A27A;">{{ reference }}</span>
+                </div>
+                <sc-for list="{{ summary }}" as="row" hint-placeholder-count="4">
+                  <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 15px 0; border-bottom: 1px solid rgba(10,10,10,0.08);">
+                    <span style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">{{ row.k }}</span>
+                    <span style="font-size: 14px; color: #0A0A0A; text-align: right;">{{ row.v }}</span>
+                  </div>
+                </sc-for>
+                <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 15px 0; border-bottom: 1px solid rgba(10,10,10,0.08);">
+                  <span style="font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: #9B9387;">Studio</span>
+                  <span style="font-size: 14px; color: #0A0A0A; text-align: right;">108 SW 9th St, Suite 26<br>Miami, FL 33130</span>
+                </div>
+              </div>
+              <a href="{{ calendarHref }}" download="moses-appointment.ics" style="border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 16px 30px; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A;" style-hover="background: #0A0A0A; color: #F4F1EB;">Add to Calendar</a>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; padding: 18px clamp(20px, 3vw, 40px) 24px; border-top: 1px solid rgba(10,10,10,0.1); background: #F4F1EB;">
+          <sc-if value="{{ showNoCard }}" hint-placeholder-val="{{ true }}">
+            <span style="font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: #9B9387; text-align: center;">No card is required for this temporary reservation.</span>
+          </sc-if>
+          <div style="display: flex; gap: 10px;">
+            <sc-if value="{{ showBack }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ back }}" style="flex: none; padding: 18px 26px; border-radius: 999px; border: 1px solid rgba(10,10,10,0.2); background: none; color: #0A0A0A; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase;" style-hover="background: rgba(10,10,10,0.06);">Back</button>
+            </sc-if>
+            <button type="button" onClick="{{ primaryAction }}" disabled="{{ primaryDisabled }}" style="flex: 1; padding: 18px 26px; border-radius: 999px; border: none; background: {{ primaryBg }}; color: {{ primaryColor }}; font-size: 10.5px; letter-spacing: 0.2em; text-transform: uppercase; transition: all .4s ease;">{{ primaryLabel }}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#B5A27A&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#B5A27A&quot;,&quot;#9B9387&quot;,&quot;#CBC7BF&quot;,&quot;#8E7C55&quot;],&quot;section&quot;:&quot;Brand&quot;},&quot;slotInterval&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;45&quot;,&quot;options&quot;:[&quot;30&quot;,&quot;45&quot;,&quot;60&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Booking&quot;},&quot;showMobileReserveBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Booking&quot;}}">
+/* ─────────────────────────────────────────────────────────────
+   EDITABLE CONTENT DATA — replace after client approval.
+   Booking payload posted later to POST /api/bookings:
+   { serviceId, serviceName, duration, price, date, time,
+     firstName, lastName, phone, email, clientType, notes,
+     consent, createdAt }
+   No credentials, webhook URLs or CRM keys belong in this file.
+   ───────────────────────────────────────────────────────────── */
+const SERVICES = [
+  { id: 'executive-haircut', name: 'Executive Haircut', duration: '45 min', minutes: 45, price: '$75', note: 'Consultation, precision cut and hot towel finish.' },
+  { id: 'signature-fade', name: 'Signature Fade', duration: '50 min', minutes: 50, price: '$85', note: 'Seamless gradient with sculpted line work.' },
+  { id: 'haircut-beard', name: 'Executive Haircut & Beard', duration: '60 min', minutes: 60, price: '$110', note: 'Full cut with beard shaping and detailing.' },
+  { id: 'beard-sculpting', name: 'Beard Sculpting', duration: '30 min', minutes: 30, price: '$45', note: 'Contour, trim and conditioning.' },
+  { id: 'private-experience', name: 'Private Grooming Experience', duration: '90 min', minutes: 90, price: '$150', note: 'Extended private session with the studio to yourself.' },
+  { id: 'concierge', name: 'Concierge / Off-Site Service', duration: 'By request', minutes: 60, price: 'By Request', note: 'Residence, office or hotel, by arrangement.' }
+];
+
+const HOURS = [
+  { day: 'Monday', label: '11:00 AM–8:00 PM', open: 11, close: 20 },
+  { day: 'Tuesday', label: '8:00 AM–8:00 PM', open: 8, close: 20 },
+  { day: 'Wednesday', label: '11:00 AM–8:00 PM', open: 11, close: 20 },
+  { day: 'Thursday', label: '10:00 AM–8:00 PM', open: 10, close: 20 },
+  { day: 'Friday', label: '10:00 AM–8:00 PM', open: 10, close: 20 },
+  { day: 'Saturday', label: '9:00 AM–5:00 PM', open: 9, close: 17 },
+  { day: 'Sunday', label: 'Closed', open: null, close: null }
+];
+
+const STEPS = ['01 — Select Service', '02 — Select Date', '03 — Select Time', '04 — Client Details', '05 — Review Reservation', '06 — Confirmation'];
+const ADDRESS = '108 SW 9th St, Suite 26, Miami, FL 33130';
+
+function pad(n) { return n < 10 ? '0' + n : '' + n; }
+function iso(d) { return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate()); }
+function hash(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return Math.abs(h); }
+function fmt12(mins) {
+  const h24 = Math.floor(mins / 60), m = mins % 60;
+  const h = h24 % 12 === 0 ? 12 : h24 % 12;
+  return h + ':' + pad(m) + ' ' + (h24 < 12 ? 'AM' : 'PM');
+}
+
+class Component extends DCLogic {
+  state = {
+    w: typeof window !== 'undefined' ? window.innerWidth : 1440,
+    navOpen: false, bookingOpen: false, step: 0,
+    serviceId: null, date: null, time: null,
+    firstName: '', lastName: '', phone: '', email: '',
+    clientType: 'New', notes: '', consent: false, reference: null
+  };
+
+  componentDidMount() {
+    this._resize = () => this.setState({ w: window.innerWidth });
+    this._key = (e) => { if (e.key === 'Escape') this.setState({ bookingOpen: false, navOpen: false }); };
+    window.addEventListener('resize', this._resize);
+    window.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._resize);
+    window.removeEventListener('keydown', this._key);
+  }
+
+  slotMinutes() { return parseInt(this.props.slotInterval || '45', 10); }
+
+  availability(dateStr) {
+    if (!dateStr) return [];
+    const d = new Date(dateStr + 'T12:00:00');
+    const h = HOURS[(d.getDay() + 6) % 7];
+    if (!h.open) return [];
+    const step = this.slotMinutes(), out = [];
+    for (let m = h.open * 60; m + step <= h.close * 60; m += step) {
+      const taken = hash(dateStr + ':' + m) % 10 < 4;
+      out.push({ minutes: m, label: fmt12(m), available: !taken });
+    }
+    return out;
+  }
+
+  days() {
+    const out = [], now = new Date();
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i);
+      const closed = d.getDay() === 0;
+      out.push({
+        iso: iso(d), closed,
+        weekday: d.toLocaleDateString('en-US', { weekday: 'short' }),
+        dayNum: d.getDate(),
+        month: d.toLocaleDateString('en-US', { month: 'short' })
+      });
+    }
+    return out;
+  }
+
+  service() { return SERVICES.find(s => s.id === this.state.serviceId) || null; }
+
+  longDate() {
+    if (!this.state.date) return '';
+    return new Date(this.state.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+  }
+
+  /* Integration boundary — swap for fetch('/api/bookings', {method:'POST', body: JSON.stringify(payload)}) */
+  submit() {
+    const s = this.service();
+    const payload = {
+      serviceId: s ? s.id : null, serviceName: s ? s.name : null,
+      duration: s ? s.duration : null, price: s ? s.price : null,
+      date: this.state.date, time: this.state.time,
+      firstName: this.state.firstName, lastName: this.state.lastName,
+      phone: this.state.phone, email: this.state.email,
+      clientType: this.state.clientType, notes: this.state.notes,
+      consent: this.state.consent, createdAt: new Date().toISOString()
+    };
+    console.info('[mock] POST /api/bookings', payload);
+    const ref = 'MES-' + String(hash(JSON.stringify(payload)) % 100000).padStart(5, '0');
+    this.setState({ reference: ref, step: 5 });
+  }
+
+  calendarHref() {
+    const s = this.service();
+    if (!s || !this.state.date || !this.state.time) return '#';
+    const slot = this.availability(this.state.date).find(t => t.label === this.state.time);
+    const start = new Date(this.state.date + 'T00:00:00');
+    start.setMinutes(slot ? slot.minutes : 720);
+    const end = new Date(start.getTime() + s.minutes * 60000);
+    const stamp = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'BEGIN:VEVENT',
+      'SUMMARY:Moses Executive Studio — ' + s.name,
+      'DTSTART:' + stamp(start), 'DTEND:' + stamp(end),
+      'LOCATION:' + ADDRESS, 'DESCRIPTION:Private grooming appointment.',
+      'END:VEVENT', 'END:VCALENDAR'].join('\r\n');
+    return 'data:text/calendar;charset=utf8,' + encodeURIComponent(ics);
+  }
+
+  detailsValid() {
+    const s = this.state;
+    return s.firstName.trim() && s.lastName.trim() && s.phone.trim().length > 6 && /.+@.+\..+/.test(s.email) && s.consent;
+  }
+
+  canContinue() {
+    const st = this.state.step;
+    if (st === 0) return !!this.state.serviceId;
+    if (st === 1) return !!this.state.date;
+    if (st === 2) return !!this.state.time;
+    if (st === 3) return !!this.detailsValid();
+    return true;
+  }
+
+  open(serviceId) {
+    this.setState({ navOpen: false }); if (typeof window!=='undefined') window.location.href = 'tel:+17604053901';
+  }
+
+  renderVals() {
+    const st = this.state;
+    const isMobile = st.w < 900;
+    const accent = this.props.accent || '#B5A27A';
+    const svc = this.service();
+    const pick = (on) => ({
+      borderColor: on ? '#0A0A0A' : 'rgba(10,10,10,0.14)',
+      bgColor: on ? 'rgba(181,162,122,0.12)' : 'transparent'
+    });
+
+    const summary = [];
+    if (svc) { summary.push({ k: 'Service', v: svc.name }); summary.push({ k: 'Duration', v: svc.duration }); summary.push({ k: 'Investment', v: svc.price }); }
+    if (st.date) summary.push({ k: 'Date', v: this.longDate() });
+    if (st.time) summary.push({ k: 'Time', v: st.time });
+    if (st.firstName || st.lastName) summary.push({ k: 'Client', v: (st.firstName + ' ' + st.lastName).trim() + ' · ' + st.clientType });
+    if (st.phone) summary.push({ k: 'Mobile', v: st.phone });
+    if (st.email) summary.push({ k: 'Email', v: st.email });
+
+    const can = this.canContinue();
+
+    return {
+      isMobile, isDesktop: !isMobile,
+      showMobileBar: isMobile && !st.bookingOpen && !st.navOpen && (this.props.showMobileReserveBar !== false),
+      navOpen: st.navOpen, bookingOpen: st.bookingOpen,
+      toggleNav: () => this.setState({ navOpen: !st.navOpen }),
+      closeNav: () => this.setState({ navOpen: false }),
+      openBooking: () => this.open(null),
+      closeBooking: () => this.setState({ bookingOpen: false }),
+
+      services: SERVICES.map((s, i) => Object.assign({}, s, {
+        index: pad(i + 1),
+        reserve: () => this.open(s.id),
+        select: () => this.setState({ serviceId: s.id, step: 1 }),
+        borderColor: st.serviceId === s.id ? '#0A0A0A' : 'rgba(10,10,10,0.14)',
+        bgColor: st.serviceId === s.id ? 'rgba(181,162,122,0.12)' : 'transparent'
+      })),
+      hours: HOURS.map(h => ({ day: h.day, label: h.label, tone: h.open ? '#141414' : '#B0ABA1' })),
+
+      days: this.days().map(d => ({
+        weekday: d.weekday, dayNum: d.dayNum, month: d.month, disabled: d.closed,
+        select: () => this.setState({ date: d.iso, time: null, step: 2 }),
+        borderColor: st.date === d.iso ? '#0A0A0A' : 'rgba(10,10,10,0.13)',
+        bgColor: st.date === d.iso ? '#0A0A0A' : 'transparent',
+        textColor: st.date === d.iso ? '#F4F1EB' : (d.closed ? '#C3BFB6' : '#141414')
+      })),
+      times: this.availability(st.date).map(t => ({
+        label: t.label, disabled: !t.available,
+        select: () => this.setState({ time: t.label, step: 3 }),
+        strike: t.available ? 'none' : 'line-through',
+        borderColor: st.time === t.label ? '#0A0A0A' : 'rgba(10,10,10,0.13)',
+        bgColor: st.time === t.label ? '#0A0A0A' : 'transparent',
+        textColor: st.time === t.label ? '#F4F1EB' : (t.available ? '#141414' : '#C3BFB6')
+      })),
+      selectedDateLong: this.longDate(),
+
+      step: st.step, stepLabel: STEPS[st.step], stepCount: 'Step ' + (st.step + 1) + ' of 6',
+      progress: Math.round(((st.step + 1) / 6) * 100) + '%',
+      isStepService: st.step === 0, isStepDate: st.step === 1, isStepTime: st.step === 2,
+      isStepDetails: st.step === 3, isStepReview: st.step === 4, isStepDone: st.step === 5,
+      drawerWidth: isMobile ? '100%' : 'min(540px, 92vw)',
+      drawerAnim: isMobile ? 'sheet .45s cubic-bezier(.2,.7,.2,1) both' : 'slidein .5s cubic-bezier(.2,.7,.2,1) both',
+      drawerAlign: isMobile ? 'flex-end' : 'stretch',
+      drawerRadius: isMobile ? '28px 28px 0 0' : '0',
+      drawerHeight: isMobile ? 'min(94svh, 94vh)' : '100%',
+      ctaWidth: isMobile ? '100%' : 'auto',
+      portraitJustify: isMobile ? 'center' : 'end',
+
+      firstName: st.firstName, lastName: st.lastName, phone: st.phone, email: st.email, notes: st.notes,
+      setFirstName: (e) => this.setState({ firstName: e.target.value }),
+      setLastName: (e) => this.setState({ lastName: e.target.value }),
+      setPhone: (e) => this.setState({ phone: e.target.value }),
+      setEmail: (e) => this.setState({ email: e.target.value }),
+      setNotes: (e) => this.setState({ notes: e.target.value }),
+      hasNotes: !!st.notes.trim(),
+      setNewClient: () => this.setState({ clientType: 'New' }),
+      setReturningClient: () => this.setState({ clientType: 'Returning' }),
+      newClientBorder: pick(st.clientType === 'New').borderColor,
+      newClientBg: st.clientType === 'New' ? '#0A0A0A' : 'transparent',
+      newClientText: st.clientType === 'New' ? '#F4F1EB' : '#141414',
+      returningBorder: pick(st.clientType === 'Returning').borderColor,
+      returningBg: st.clientType === 'Returning' ? '#0A0A0A' : 'transparent',
+      returningText: st.clientType === 'Returning' ? '#F4F1EB' : '#141414',
+      toggleConsent: () => this.setState({ consent: !st.consent }),
+      consentBorder: st.consent ? '#0A0A0A' : 'rgba(10,10,10,0.3)',
+      consentBg: st.consent ? '#0A0A0A' : 'transparent',
+      consentMark: st.consent ? '✓' : '',
+
+      summary,
+      reference: st.reference,
+      calendarHref: this.calendarHref(),
+      showNoCard: st.step < 5,
+      showBack: st.step > 0 && st.step < 5,
+      back: () => this.setState({ step: Math.max(0, st.step - 1) }),
+      primaryLabel: st.step === 4 ? 'Confirm Reservation' : (st.step === 5 ? 'Close' : 'Continue'),
+      primaryDisabled: !can,
+      primaryBg: can ? '#0A0A0A' : 'rgba(10,10,10,0.16)',
+      primaryColor: can ? '#F4F1EB' : 'rgba(250,249,246,0.7)',
+      primaryAction: () => {
+        if (st.step === 4) return this.submit();
+        if (st.step === 5) return this.setState({ bookingOpen: false });
+        if (can) this.setState({ step: st.step + 1 });
+      },
+      accent
+    };
+  }
+}
+
+</script>
+</body>
+</html>
