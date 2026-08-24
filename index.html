@@ -719,5 +719,47 @@ class Component extends DCLogic {
 }
 
 </script>
+
+<!-- Moses Concierge Chat (n8n webhook) -->
+<style>
+  #mchat-btn{position:fixed;right:22px;bottom:22px;z-index:9998;width:58px;height:58px;border-radius:999px;border:none;background:#0A0A0A;color:#B5A27A;cursor:pointer;box-shadow:0 8px 30px rgba(0,0,0,.35);font-size:22px;display:flex;align-items:center;justify-content:center;transition:.3s}
+  #mchat-btn:hover{box-shadow:0 0 34px rgba(181,162,122,.5)}
+  #mchat-panel{position:fixed;right:22px;bottom:92px;z-index:9999;width:min(370px,92vw);height:min(560px,74vh);background:#FAF9F6;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.4);display:none;flex-direction:column;overflow:hidden;font-family:'Instrument Sans',-apple-system,Segoe UI,sans-serif}
+  #mchat-head{background:#0A0A0A;color:#F4F1EB;padding:16px 18px;font-family:'Bodoni Moda',serif;font-size:17px;display:flex;justify-content:space-between;align-items:center}
+  #mchat-head small{display:block;font-family:'Instrument Sans',sans-serif;font-size:9.5px;letter-spacing:.24em;text-transform:uppercase;color:#B5A27A;margin-top:2px}
+  #mchat-close{background:none;border:none;color:#F4F1EB;font-size:18px;cursor:pointer}
+  #mchat-log{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px}
+  .mmsg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5}
+  .mmsg.bot{background:#EDE7DB;color:#1a1a1a;align-self:flex-start;border-bottom-left-radius:4px}
+  .mmsg.me{background:#0A0A0A;color:#F4F1EB;align-self:flex-end;border-bottom-right-radius:4px}
+  #mchat-input{display:flex;gap:8px;padding:12px;border-top:1px solid #e5e0d6;background:#fff}
+  #mchat-in{flex:1;border:1px solid #e0dbd0;border-radius:999px;padding:11px 15px;font-size:14px;outline:none}
+  #mchat-send{border:none;background:#0A0A0A;color:#F4F1EB;border-radius:999px;padding:0 18px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+</style>
+<button id="mchat-btn" aria-label="Chat">&#9993;</button>
+<div id="mchat-panel">
+  <div id="mchat-head"><div>Moses Executive Studio<small>Concierge</small></div><button id="mchat-close" aria-label="Close">&times;</button></div>
+  <div id="mchat-log"></div>
+  <div id="mchat-input"><input id="mchat-in" type="text" placeholder="Ask or book an appointment..."><button id="mchat-send">Send</button></div>
+</div>
+<script>
+(function(){
+  var API="https://the303photography.app.n8n.cloud/webhook/recepcionista-moses";
+  var sid=sessionStorage.getItem("mchat_sid"); if(!sid){sid="web-"+Math.random().toString(36).slice(2);sessionStorage.setItem("mchat_sid",sid);}
+  var panel=document.getElementById("mchat-panel"),log=document.getElementById("mchat-log"),input=document.getElementById("mchat-in");
+  var open=false;
+  function toggle(){open=!open;panel.style.display=open?"flex":"none";if(open&&!log.dataset.g){add("bot","Welcome to Moses Executive Studio. How may I help you book your private appointment?");log.dataset.g="1";input.focus();}}
+  function add(who,t){var d=document.createElement("div");d.className="mmsg "+who;d.textContent=t;log.appendChild(d);log.scrollTop=log.scrollHeight;return d;}
+  function send(){var t=input.value.trim();if(!t)return;add("me",t);input.value="";var typing=add("bot","…");
+    fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:t,sessionId:sid})})
+    .then(function(r){return r.json();}).then(function(d){typing.remove();add("bot",(d&&d.reply)?d.reply:"Sorry, please try again.");})
+    .catch(function(){typing.remove();add("bot","Connection issue. Please call the studio at +1 760-405-3901.");});}
+  document.getElementById("mchat-btn").onclick=toggle;
+  document.getElementById("mchat-close").onclick=toggle;
+  document.getElementById("mchat-send").onclick=send;
+  input.addEventListener("keydown",function(e){if(e.key==="Enter")send();});
+})();
+</script>
+
 </body>
 </html>
