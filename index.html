@@ -130,8 +130,8 @@
             <p style="margin: 0; font-size: 13.5px; line-height: 1.7; color: #6d6a62; max-width: 300px;">{{ s.note }}</p>
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 18px; border-top: 1px solid rgba(10,10,10,0.09);">
-            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #9B9387;">{{ s.duration }} · {{ s.price }}</span>
-            <button type="button" onClick="{{ s.reserve }}" style="background: none; border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 15px 24px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A; transition: all .4s ease;" style-hover="background: #0A0A0A; color: #F4F1EB; border-color: #0A0A0A;">Book</button>
+            <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #9B9387;">{{ s.duration }}</span>
+            <a href="{{ s.waHref }}" target="_blank" rel="noopener" style="background: none; border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 15px 24px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A; text-decoration: none; transition: all .4s ease;" style-hover="background: #0A0A0A; color: #F4F1EB; border-color: #0A0A0A;">Book</a>
           </div>
         </div>
       </sc-for>
@@ -642,6 +642,7 @@ class Component extends DCLogic {
       services: SERVICES.map((s, i) => Object.assign({}, s, {
         index: pad(i + 1),
         reserve: () => this.open(s.id),
+        waHref: 'https://wa.me/17604053901?text=' + encodeURIComponent("Hi Moses, I'd like to book: " + s.name + "."),
         select: () => this.setState({ serviceId: s.id, step: 1 }),
         borderColor: st.serviceId === s.id ? '#0A0A0A' : 'rgba(10,10,10,0.14)',
         bgColor: st.serviceId === s.id ? 'rgba(181,162,122,0.12)' : 'transparent'
