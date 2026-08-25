@@ -131,7 +131,7 @@
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-top: 18px; border-top: 1px solid rgba(10,10,10,0.09);">
             <span style="font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: #9B9387;">{{ s.duration }}</span>
-            <a href="{{ s.waHref }}" target="_blank" rel="noopener" style="background: none; border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 15px 24px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A; text-decoration: none; transition: all .4s ease;" style-hover="background: #0A0A0A; color: #F4F1EB; border-color: #0A0A0A;">Book</a>
+            <a href="/book.html" target="_blank" rel="noopener" style="background: none; border: 1px solid rgba(10,10,10,0.2); border-radius: 999px; padding: 15px 24px; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #0A0A0A; text-decoration: none; transition: all .4s ease;" style-hover="background: #0A0A0A; color: #F4F1EB; border-color: #0A0A0A;">Book</a>
           </div>
         </div>
       </sc-for>
@@ -608,7 +608,7 @@ class Component extends DCLogic {
   }
 
   open(serviceId) {
-    this.setState({ navOpen: false }); if (typeof window!=='undefined') window.location.href = 'tel:+17604053901';
+    this.setState({ navOpen: false }); if (typeof window!=='undefined') window.location.href = '/book.html';
   }
 
   renderVals() {
