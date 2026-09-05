@@ -68,7 +68,7 @@
 <header class="site">
  <a href="/"><img src="/brand/moses-full.png" alt="Moses Executive Studio"></a>
  <div class="eyebrow">Brickell · Miami · By appointment</div>
- <h1>Client Reviews</h1>
+ <h1>Moses Executive Studio Reviews</h1>
  <div class="sub">Men's grooming and barber services in Brickell, Miami</div>
  <a class="back" href="/">&larr; Back to studio</a>
 </header>
@@ -76,7 +76,7 @@
 <div class="wrap">
  <p class="intro">Moses Executive Studio is a men's grooming studio serving clients in Brickell and Downtown Miami. Clients visit Moses for professional men's haircuts, scissor cuts, skin fades, beard grooming and executive grooming services. Below are experiences shared by clients who have visited the studio.</p>
 
- <div class="summary">
+ <div class="summary" id="summary">
   <div><div class="big" id="avg">—</div><div class="stars" id="avgStars">★★★★★</div></div>
   <div><div class="muted"><span id="count">0</span> client reviews</div><div class="muted">Moses Executive Studio · Brickell, Miami</div></div>
  </div>
@@ -88,7 +88,7 @@
  <div class="cards" id="cards"></div>
 
  <h2>Leave a review</h2>
- <p class="muted" style="margin-bottom:6px">Share your experience — stars, a comment and a photo. Reviews appear after a quick check.</p>
+ <p class="muted" style="margin-bottom:6px">Share your experience — stars, a comment and a photo. Every review is automatically screened for spam and inappropriate content before it appears.</p>
  <form class="rev" id="revForm">
   <label>Your rating</label>
   <div class="starpick" id="starpick"><span data-v="1">★</span><span data-v="2">★</span><span data-v="3">★</span><span data-v="4">★</span><span data-v="5">★</span></div>
@@ -96,8 +96,6 @@
   <label>Service</label>
   <select id="f_service"><option>Men's Haircut</option><option>Scissor Haircut</option><option>Skin Fade</option><option>Beard Grooming</option><option>Executive Grooming</option><option>Other</option></select>
   <label>Your review</label><textarea id="f_comment" placeholder="Tell us about your experience..." required></textarea>
-  <label>Add photos (optional)</label><input type="file" id="f_photos" accept="image/*" multiple>
-  <div class="filepreview" id="filepreview"></div>
   <button class="btn" type="submit" id="subBtn">Submit review</button>
   <div id="formMsg" style="margin-top:12px;font-size:13px;color:var(--gold)"></div>
  </form>
@@ -111,7 +109,7 @@
  </div>
 
  <h2>About Moses Executive Studio</h2>
- <p class="muted" style="font-size:14.5px;color:#4f4c46">Moses Executive Studio is a men's grooming and barber studio serving Brickell and Downtown Miami. The studio specializes in men's haircuts, scissor cuts, skin fades, beard grooming and executive grooming services.</p>
+ <p class="muted" style="font-size:14.5px;color:#4f4c46">Moses Executive Studio is a private, appointment-only grooming studio in Brickell. Every visit starts with a short consultation about your hair, routine and the look you want, so the result fits your day-to-day — not just the chair. Sessions are one-on-one and unhurried, built for professionals who value privacy and a consistent, polished result.</p>
 
  <div class="nap">
   <div class="row"><b>Moses Executive Studio</b> — Men's Grooming Studio / Barber Shop</div>
@@ -131,10 +129,8 @@
 <script>
 // ====== REVIEWS DATA (reemplazar por reseñas REALES; borrar "example:true") ======
 const REVIEWS = [
- {name:"Daniel R.", service:"Scissor Haircut", stars:5, date:"Aug 2026", example:true,
-  text:"I came to Moses for a scissor haircut before an important meeting. He understood the length and shape I wanted and the result looked professional without feeling overstyled.", photos:[]},
- {name:"Andres M.", service:"Executive Grooming", stars:5, date:"Aug 2026", example:true,
-  text:"Private, no waiting, and a clean precise cut. Exactly what I want as a professional in Brickell.", photos:[]}
+ // Aquí van SOLO reseñas reales. Formato:
+ // {name:"Nombre", service:"Scissor Haircut", stars:5, date:"Sep 2026", text:"...", photos:[]}
 ];
 const WEBHOOK="https://the303photography.app.n8n.cloud/webhook/moses-reviews";
 const SVC=["All","Men's Haircut","Scissor Haircut","Skin Fade","Beard Grooming","Executive Grooming"];
@@ -151,28 +147,29 @@ function render(){
  document.getElementById('avgStars').textContent=starStr(Math.round(avg));
  document.getElementById('count').textContent=REVIEWS.length;
  document.getElementById('exampleBanner').style.display=REVIEWS.some(r=>r.example)?'block':'none';
+ document.getElementById('summary').style.display=REVIEWS.length?'flex':'none';
 }
 const chips=document.getElementById('chips');
 SVC.forEach(s=>{const b=document.createElement('button');b.className='chip'+(s==='All'?' active':'');b.textContent=s;b.onclick=()=>{filter=s;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));b.classList.add('active');render();};chips.appendChild(b);});
+// Cargar reseñas APROBADAS desde n8n (se llena solo cuando el workflow esté activo)
+fetch('https://the303photography.app.n8n.cloud/webhook/moses-reviews-list').then(r=>r.json()).then(d=>{if(Array.isArray(d)&&d.length){REVIEWS.length=0;d.forEach(x=>REVIEWS.push(x));render();}}).catch(()=>{});
 render();
 // star picker
 let rating=0;
 document.querySelectorAll('#starpick span').forEach(s=>{s.onclick=()=>{rating=+s.dataset.v;document.querySelectorAll('#starpick span').forEach(x=>x.classList.toggle('on',+x.dataset.v<=rating));};});
 // photo preview + base64
-let photoData=[];
-document.getElementById('f_photos').onchange=(e)=>{photoData=[];const pv=document.getElementById('filepreview');pv.innerHTML='';[...e.target.files].slice(0,4).forEach(f=>{const rd=new FileReader();rd.onload=ev=>{photoData.push(ev.target.result);const im=document.createElement('img');im.src=ev.target.result;pv.appendChild(im);};rd.readAsDataURL(f);});};
 // submit
 document.getElementById('revForm').onsubmit=async(e)=>{
  e.preventDefault();
  const msg=document.getElementById('formMsg');
  if(!rating){msg.textContent='Please select a star rating.';return;}
- const payload={name:document.getElementById('f_name').value,service:document.getElementById('f_service').value,stars:rating,comment:document.getElementById('f_comment').value,photos:photoData,submitted_at:new Date().toISOString(),source:'website'};
+ const payload={name:document.getElementById('f_name').value,service:document.getElementById('f_service').value,stars:rating,comment:document.getElementById('f_comment').value,submitted_at:new Date().toISOString(),source:'website'};
  document.getElementById('subBtn').textContent='Sending...';
  try{
   const res=await fetch(WEBHOOK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
   msg.style.color='var(--gold)';
   msg.textContent='Thank you! Your review was submitted and will appear after a quick review.';
-  e.target.reset();document.getElementById('filepreview').innerHTML='';photoData=[];rating=0;document.querySelectorAll('#starpick span').forEach(x=>x.classList.remove('on'));
+  e.target.reset();rating=0;document.querySelectorAll('#starpick span').forEach(x=>x.classList.remove('on'));
  }catch(err){
   msg.style.color='#c98';
   msg.innerHTML='Could not submit right now. Please send it via <a href="https://wa.me/17604053901" style="color:var(--gold)">WhatsApp</a>.';
