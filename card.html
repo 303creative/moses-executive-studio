@@ -53,7 +53,7 @@
     <p class="loc">Brickell · 1170 SW 2nd Ave, Miami, FL 33130</p>
 
     <div class="stack">
-      <a class="btn gold" href="book.html">
+      <a class="btn gold" href="https://www.mosesexecutivestudio.com/book.html">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>
         Book an Appointment
       </a>
@@ -98,15 +98,15 @@
 (function(){
   var vcard = [
     "BEGIN:VCARD","VERSION:3.0",
-    "N:;Moses Executive Studio;;;",
-    "FN:Moses Executive Studio",
+    "N:Scott;Moses;;;",
+    "FN:Moses Scott",
     "ORG:Moses Executive Studio",
-    "TITLE:Private Grooming Studio",
+    "TITLE:Private Grooming — Brickell, Miami",
     "TEL;TYPE=CELL,VOICE:+17604053901",
     "EMAIL;TYPE=WORK:info@mosesexecutivestudio.com",
     "URL:https://www.mosesexecutivestudio.com",
     "ADR;TYPE=WORK:;;1170 SW 2nd Ave;Miami;FL;33130;USA",
-    "NOTE:Private grooming studio in Brickell, Miami. By appointment.",
+    "NOTE:Moses Executive Studio — private grooming in Brickell, Miami. By appointment.",
     "END:VCARD"
   ].join("\r\n");
   document.getElementById("saveContact").addEventListener("click", function(){
@@ -114,7 +114,7 @@
       var blob = new Blob([vcard], {type:"text/vcard;charset=utf-8"});
       var url = URL.createObjectURL(blob);
       var a = document.createElement("a");
-      a.href = url; a.download = "moses-executive-studio.vcf";
+      a.href = url; a.download = "Moses-Scott.vcf";
       document.body.appendChild(a); a.click();
       setTimeout(function(){ URL.revokeObjectURL(url); a.remove(); }, 1500);
     }catch(e){
