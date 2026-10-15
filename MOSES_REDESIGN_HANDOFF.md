@@ -42,3 +42,9 @@ Borrar estos 3 archivos temporales de QA (el sandbox no los dejó borrar por per
 ## Rutas (mapa del prototipo → real)
 
 `Home.dc.html` → `index.html` · `Journal.dc.html` → `blog.html` · `Journal Article.dc.html` → `blog-beard-boardroom.html`. Todos los CTA → `book.html` (Vagaro). Reviews / Privacy / Terms / SMS sin cambios.
+
+## Cambio solicitado por Moses (2026-10-14)
+
+- **Portada:** Moses prefirió el retrato **de frente, sonriendo, con las tijeras** (archivo `WhatsAppImage...PMs.jpeg`, 1261×1935) en lugar del perfil original (P02). Ya está puesto en el héroe de `index.html` como `moses-portrait-front` (AVIF/WebP/JPEG 640/1024/1261, `object-position:35% 35%` para mantener la cara a la izquierda y las tijeras). Nota: es una foto de buena resolución pero no de la sesión profesional completa; suficiente para el tamaño del héroe.
+- **Selfie** (secador + trimmer dorado, mandil FACON, `WhatsAppImage...PM.jpeg`, 1290×1577): exportado como `moses-selfie-tools` (640/1024/1290) y **a la espera de decidir dónde va** (no colocado aún; es un selfie informal, no encaja en el About sobrio tal cual).
+- Temporales de QA a borrar: `_qa_preview.html`, `_mini_test.html`, `_contact_sheet.html`, `_hero_preview.html`.
